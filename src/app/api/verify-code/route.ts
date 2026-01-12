@@ -1,8 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
-import  { json, success, z } from "zod";
-import { usernameValidation } from "@/schemas/signUpSchema";
-import { use } from "react";
 
 export async function POST(request:Request){
    await dbConnect()
