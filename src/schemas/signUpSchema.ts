@@ -2,9 +2,9 @@ import { email, z } from "zod";
 
 export const usernameValidation = z
 .string()
-.min(2, "Username must be atleast 2 characters")
-.max(20, "Username must be no more than 20 characters")
-.regex(/^[a-zA-Z0-9_]{3,15}$/, "Username must not contain special character")
+.min(3, "Username must be atleast 3 characters")
+.max(15, "Username must be no more than 15 characters")
+.regex(/^[a-zA-Z0-9_]+$/, "Username must contain only letters, numbers, and underscores")
 
 export const signUpSchema = z.object({
     username: usernameValidation,

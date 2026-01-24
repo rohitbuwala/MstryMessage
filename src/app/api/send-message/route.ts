@@ -12,7 +12,7 @@ export async function POST(request: Request){
     try {
         
         const user = await UserModel.findOne({username})
-        if(!user?.isAcceptingMessage){
+        if(!user?.isAcceptingMessages){
             return Response.json({
                 success: false,
                 messages: "User is Not Accepting the messsage"
