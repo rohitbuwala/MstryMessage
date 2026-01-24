@@ -19,12 +19,12 @@ export async function POST(request:Request){
 
          //age user mila to 
 
-         const isCodevalid = user.verifyCode === code 
-         const iscodeNotExpired = new Date(username.verifyCodeExpiry) > new Date()
+const isCodevalid = user.verifyCode === code 
+          const iscodeNotExpired = new Date(user.verifyCodeExpiry) > new Date()
 
-         if(isCodevalid && iscodeNotExpired){
-            user.isVerified ==true
-            await user.save()
+if(isCodevalid && iscodeNotExpired){
+             user.isVerified = true
+             await user.save()
 
             return Response.json({
                 success: true,

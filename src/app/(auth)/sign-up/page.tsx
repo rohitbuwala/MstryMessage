@@ -107,7 +107,6 @@ function page() {
             const value = e.target.value;
             field.onChange(value);
             debounced(value);
-            setUsername(value);
           }}
                 />
               </FormControl>

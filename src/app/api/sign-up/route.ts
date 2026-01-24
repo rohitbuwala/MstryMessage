@@ -60,6 +60,7 @@ export async function POST(request: Request) {
       });
 
       await newUser.save();
+      console.log('User saved successfully:', newUser);
     }
 
     // Send verification email
@@ -85,12 +86,12 @@ export async function POST(request: Request) {
       },
       { status: 201 }
     );
-  } catch (error) {
+} catch (error) {
     console.error('Error registering user:', error);
     return Response.json(
       {
         success: false,
-        message: 'Error registering user',
+        message: error instanceof Error ? error.message : 'Error registering user',
       },
       { status: 500 }
     );

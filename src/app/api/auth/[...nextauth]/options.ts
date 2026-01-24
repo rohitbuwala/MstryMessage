@@ -10,10 +10,10 @@ export const authOptions:NextAuthOptions = {
        CredentialsProvider({
          id: "credentials",
         name: "Credentials",
-         credentials: {
-          email: { label: "Email", type: "text" },
-         password: { label: "Password", type: "password" }
-         },
+credentials: {
+           identifier: { label: "Email/Username", type: "text" },
+          password: { label: "Password", type: "password" }
+          },
             async authorize(credentials: any): Promise<any>{
              if (!credentials?.identifier || !credentials?.password) {
                  throw new Error("Missing credentials");
