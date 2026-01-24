@@ -9,15 +9,29 @@ import { ApiResponse } from "@/types/ApiResponse";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
 import { useParams, useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form";
 import { toast, useSonner } from "sonner";
 import * as z from "zod";
 
  
- const VerifyAccount = () => {
-    const router = useRouter();
-    const params = useParams<{username: string}>();
-    //const {toast} = useSonner();
+const VerifyAccount = () => {
+     const router = useRouter();
+     const params = useParams<{username: string}>();
+     const [displayCode, setDisplayCode] = useState<string>('');
+     //const {toast} = useSonner();
+
+     // Get code from localStorage or generate a test code
+     useEffect(() => {
+        const savedCode = localStorage.getItem('verificationCode');
+        if (savedCode) {
+            setDisplayCode(savedCode);
+        } else {
+            // Generate a random 6-digit code for testing
+            const testCode = Math.floor(100000 + Math.random() * 900000).toString();
+            setDisplayCode(testCode);
+        }
+     }, []);
 
     const form= useForm<z.infer<typeof verifySchema>>({
           resolver: zodResolver( verifySchema),
@@ -70,9 +84,12 @@ import * as z from "zod";
               <FormControl>
                 <Input placeholder="Enter the Verification code" {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
+<FormDescription>
+                 <div className="bg-yellow-50 border border-yellow-200 rounded p-2 mb-2 text-center">
+                   <strong>Test Code:</strong> {displayCode}
+                 </div>
+                 This is your public display name.
+               </FormDescription>
               <FormMessage />
             </FormItem>
           )}

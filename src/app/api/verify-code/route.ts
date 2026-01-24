@@ -19,17 +19,18 @@ export async function POST(request:Request){
 
          //age user mila to 
 
-const isCodevalid = user.verifyCode === code 
+const isCodevalid = user.verifyCode?.toLowerCase() === code?.toLowerCase() 
           const iscodeNotExpired = new Date(user.verifyCodeExpiry) > new Date()
 
 if(isCodevalid && iscodeNotExpired){
-             user.isVerified = true
-             await user.save()
+              user.isVerified = true
+              await user.save()
+              console.log(`✅ User ${decodedUsername} verified successfully!`);
 
-            return Response.json({
-                success: true,
-                message: "Account verify successfully"
-            }, {status: 200})
+             return Response.json({
+                 success: true,
+                 message: "Account verify successfully"
+             }, {status: 200})
          }else if(!iscodeNotExpired){
             return Response.json({
                 success: false,
@@ -44,7 +45,7 @@ if(isCodevalid && iscodeNotExpired){
 
 
    } catch (error) {
-    console.error("Error verifying user", error)
+    console.error("Error verifying user:", error)
     return Response.json({
         success: false,
         message: "Error verifying user"

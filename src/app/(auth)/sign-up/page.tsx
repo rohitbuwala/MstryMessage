@@ -65,6 +65,21 @@ function page() {
        setIsSubmitting(true);
        try {
          const response = await axios.post<ApiResponse>(`/api/sign-up`, data);
+         
+         // Show verification code for testing
+         if (response.data.verifyCode) {
+           // Store code in localStorage for verify page
+           localStorage.setItem('verificationCode', response.data.verifyCode);
+           
+           toast.success("🎉 Your Verification Code", {
+           description: `Code: ${response.data.verifyCode}\nThis is your public display name.`,
+           duration: 10000 // Show for 10 seconds
+           });
+           
+           // Also show in browser console
+           console.log(`🔔 VERIFICATION CODE: ${response.data.verifyCode}`);
+         }
+         
          toast.success("Success", {
         description: response.data.message
          });

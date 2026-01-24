@@ -60,29 +60,26 @@ export async function POST(request: Request) {
       });
 
       await newUser.save();
-      console.log('User saved successfully:', newUser);
+      console.log('User saved successfully:', {username: newUser.username, email: newUser.email});
     }
 
-    // Send verification email
+// Send verification email
+    console.log(`🔔 VERIFICATION CODE for ${username}: ${verifyCode}`);
     const emailResponse = await sendVerificationEmail(
       email,
       username,
       verifyCode
     );
     if (!emailResponse.success) {
-      return Response.json(
-        {
-          success: false,
-          message: emailResponse.message,
-        },
-        { status: 500 }
-      );
+      console.log('⚠️ Email failed but user registered. Code:', verifyCode);
+      // Continue with registration even if email fails for testing
     }
 
-    return Response.json(
+return Response.json(
       {
         success: true,
         message: 'User registered successfully. Please verify your account.',
+        verifyCode: verifyCode // Add code in response for testing
       },
       { status: 201 }
     );

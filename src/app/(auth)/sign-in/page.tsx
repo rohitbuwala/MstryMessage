@@ -37,19 +37,27 @@ function page() {
     })
 
 
-    const onSubmit = async(data: z.infer<typeof signInSchema>) => {
-       const result = await signIn('credentials', {
-        redirect: false,
-        identifier: data.identifier,
-        password: data.password
-      })
-      if(result?.error){
-        toast.error("Login Failed", {
-        description: "Incorrect username or password"});
-      }
-      if(result?.url){
-        router.replace('/dashboard')
-      }
+const onSubmit = async(data: z.infer<typeof signInSchema>) => {
+       setIsSubmitting(true)
+       try {
+         const result = await signIn('credentials', {
+           redirect: false,
+           identifier: data.identifier,
+           password: data.password
+         })
+if(result?.error){
+          toast.error("Login Failed", {
+          description: "Incorrect username or password"});
+        }
+        if(result?.url){
+          router.replace('/dashboard')
+        }
+       } catch (error) {
+         toast.error("Login Failed", {
+         description: "An error occurred during sign in"});
+       } finally {
+         setIsSubmitting(false)
+       }
     }
 
   return (
