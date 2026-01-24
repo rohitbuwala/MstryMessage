@@ -101,7 +101,7 @@ const page = () => {
     return <div>Please Login</div>
   }
 
-  const {username} = session.user as User
+  const username = session.user.username || ''
   const baseUrl = `${window.location.protocol}//${window.location.host}`
   const profileUrl = `${baseUrl}/u/${username}`
 
@@ -159,9 +159,9 @@ const page = () => {
         {messages.length > 0 ? (
           messages.map((message, index) => (
             <MessageCard
-              key={message._id}
+              key={message._id?.toString()}
               message={message}
-              onMessageDelete={handleDeleteMessage}
+              OnMessageDelete={handleDeleteMessage}
             />
           ))
         ) : (
