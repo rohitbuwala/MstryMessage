@@ -3,9 +3,7 @@ import  CredentialsProvider  from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
-import { id, th } from "zod/locales";
-import Credentials from "next-auth/providers/credentials";
-import { jwt, promise } from "zod";
+
 
 export const authOptions:NextAuthOptions = {
      providers : [
@@ -52,7 +50,7 @@ export const authOptions:NextAuthOptions = {
         if(user){
             token._id =user._id?.toString()
             token.isVerified = user.isVerified
-            token.isAcceptingmessage = user.isAcceptingMessages
+            token.isAcceptingMessages = user.isAcceptingMessage
             token.username = user.username
         }
             return token
