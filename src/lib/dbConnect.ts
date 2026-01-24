@@ -15,14 +15,18 @@ async function dbConnect(): Promise<void> {
     }
 
     try {
-      const db =  await mongoose.connect(process.env.MONGODB_URI || "")
-
-    connection.isConnected = db.connections[0].readyState
+      if (!process.env.MONGODB_URI) {
+        throw new Error("MONGODB_URI environment variable is not defined");
+      }
+      
+      const db =  await mongoose.connect(process.env.MONGODB_URI)
+      connection.isConnected = db.connections[0].readyState
+      console.log("Connected to database successfully");
         
     } catch (error) {
-        console.log("Database connection is failed");
-
-        process.exit(1)
+        console.error("Database connection failed:", error);
+        connection.isConnected = 0;
+        throw error;
     }
 }
 export default dbConnect;

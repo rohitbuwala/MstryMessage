@@ -40,7 +40,7 @@ function page() {
 
     useEffect(() => {
       const checkUsernameUnique = async () => {
-        if(username){
+        if(username && username.length >= 3){
           setIsCheckingUsername(true);
           setUsernameMessage('')
           try {
@@ -54,40 +54,32 @@ function page() {
           }finally{
             setIsCheckingUsername(false)
           }
+        } else if (username && username.length < 3) {
+          setUsernameMessage('Username must be at least 3 characters')
         }
       }
       checkUsernameUnique();
     }, [username])
 
-    const onSubmit = async(data: z.infer<typeof signUpSchema>) => {
-      setIsSubmitting(true);
-      try {
-        const response = await axios.post<ApiResponse>(`/api/sign-up`, data);
-        // toast({
-        //   title: 'success',
-        //   description: response.data.message
-        // })
-        toast.success("Success", {
-       description: response.data.message
+     const onSubmit = async(data: z.infer<typeof signUpSchema>) => {
+       setIsSubmitting(true);
+       try {
+         const response = await axios.post<ApiResponse>(`/api/sign-up`, data);
+         toast.success("Success", {
+        description: response.data.message
          });
-        route.replace(`/verify/${username}`);
-        setIsSubmitting(false);
-      } catch (error) {
-        console.error("Error of signup user", error )
-        const axiosError = error as AxiosError<ApiResponse>;
-        let errorMessage = axiosError.response?.data.message ;
-        // toast({
-        //   title: "SignUp failed",
-        //   description: errorMessage,
-        //   variant: "destructive"
-        // })
-        toast.error("SignUp failed", {
-        description: errorMessage
-         });
-        setIsSubmitting(false)
-      }
-
-    }
+         route.replace(`/verify/${data.username}`);
+       } catch (error) {
+         console.error("Error signing up user", error )
+         const axiosError = error as AxiosError<ApiResponse>;
+         let errorMessage = axiosError.response?.data.message || "Error signing up";
+         toast.error("SignUp failed", {
+         description: errorMessage
+          });
+       } finally {
+         setIsSubmitting(false);
+       }
+     }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -111,10 +103,12 @@ function page() {
               <FormControl>
                 <Input placeholder="Username" 
                 {...field} 
-                onChange={(e) => {
-                  field.onChange(e)
-                  debounced(e.target.value)
-                }}
+          onChange={(e) => {
+            const value = e.target.value;
+            field.onChange(value);
+            debounced(value);
+            setUsername(value);
+          }}
                 />
               </FormControl>
                 {isCheckingUsername && <Loader2 className="animate-spin"/>}
