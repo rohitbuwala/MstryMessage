@@ -8,7 +8,7 @@ import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { CardHeader, CardContent, Card } from '@/components/ui/card';
-import { useCompletion } from '@ai-sdk/react';
+
 import {
   Form,
   FormControl,
@@ -38,15 +38,9 @@ export default function SendMessage() {
   const params = useParams<{ username: string }>();
   const username = params.username;
 
-  const {
-    complete,
-    completion,
-    isLoading: isSuggestLoading,
-    error,
-  } = useCompletion({
-    api: '/api/suggest-messages',
-    initialCompletion: initialMessageString,
-  });
+  const [completion, setCompletion] = useState(initialMessageString);
+  const [isSuggestLoading, setIsSuggestLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof messageSchema>>({
     resolver: zodResolver(messageSchema),
@@ -81,11 +75,27 @@ export default function SendMessage() {
   };
 
   const fetchSuggestedMessages = async () => {
+    setIsSuggestLoading(true);
+    setError(null);
     try {
-      complete('');
+      const response = await fetch('/api/suggest-messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch suggestions');
+      }
+      
+      const data = await response.text();
+      setCompletion(data);
     } catch (error) {
       console.error('Error fetching messages:', error);
-      // Handle error appropriately
+      setError(error instanceof Error ? error.message : 'Failed to fetch suggestions');
+    } finally {
+      setIsSuggestLoading(false);
     }
   };
 
@@ -145,7 +155,7 @@ export default function SendMessage() {
           </CardHeader>
           <CardContent className="flex flex-col space-y-4">
             {error ? (
-              <p className="text-red-500">{error.message}</p>
+              <p className="text-red-500">{error}</p>
             ) : (
               parseStringMessages(completion).map((message, index) => (
                 <Button
