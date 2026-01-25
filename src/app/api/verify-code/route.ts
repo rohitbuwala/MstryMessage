@@ -17,12 +17,24 @@ export async function POST(request:Request){
             },{status: 500})
          }
 
-         //age user mila to 
-
-const isCodevalid = user.verifyCode?.toLowerCase() === code?.toLowerCase() 
+          //age user mila to 
+          
+          console.log('=== DEBUG VERIFICATION ===');
+          console.log('User found:', user.username);
+          console.log('Stored code:', user.verifyCode);
+          console.log('Provided code:', code);
+          console.log('Code expiry:', user.verifyCodeExpiry);
+          console.log('Current time:', new Date());
+          console.log('User isVerified:', user.isVerified);
+          
+          const isCodevalid = user.verifyCode?.toLowerCase() === code?.toLowerCase() 
           const iscodeNotExpired = new Date(user.verifyCodeExpiry) > new Date()
+          
+          console.log('Is code valid:', isCodevalid);
+          console.log('Is code not expired:', iscodeNotExpired);
+          console.log('=== END DEBUG ===');
 
-if(isCodevalid && iscodeNotExpired){
+          if(isCodevalid && iscodeNotExpired){
               user.isVerified = true
               await user.save()
               console.log(`✅ User ${decodedUsername} verified successfully!`);

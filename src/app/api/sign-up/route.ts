@@ -39,14 +39,16 @@ export async function POST(request: Request) {
       } else {
         const hashedPassword = await bcrypt.hash(password, 10);
         existingUserByEmail.password = hashedPassword;
+        existingUserByEmail.username = username; // Update username too!
         existingUserByEmail.verifyCode = verifyCode;
-        existingUserByEmail.verifyCodeExpiry = new Date(Date.now() + 3600000);
+        existingUserByEmail.verifyCodeExpiry = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours
+        existingUserByEmail.isVerified = false; // Reset verification status
         await existingUserByEmail.save();
+        console.log('User updated successfully:', {username: existingUserByEmail.username, email: existingUserByEmail.email, verifyCode});
       }
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
-      const expiryDate = new Date();
-      expiryDate.setHours(expiryDate.getHours() + 1);
+      const expiryDate = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours
 
       const newUser = new UserModel({
         username,

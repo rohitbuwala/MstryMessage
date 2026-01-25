@@ -18,9 +18,16 @@ export async function GET(request: Request) {
       { status: 401 }
     );
   }
+  console.log('=== GET MESSAGES DEBUG ===');
+  console.log('User from session:', user);
   const userId = user._id;
+  console.log('User ID:', userId);
+  
   try {
     const foundUser = await UserModel.findById(userId);
+    console.log('Found user:', foundUser?.username);
+    console.log('Messages count:', foundUser?.messages?.length || 0);
+    console.log('All messages:', foundUser?.messages);
     
     if (!foundUser) {
       return Response.json(
