@@ -43,7 +43,7 @@ export async function  POST(request: Request){
 
         
     } catch (error) {
-        console.error("Failed to update user status to aceept Message")
+console.error("Failed to update user status to accept Message")
 
         return Response.json({
             success: false,
@@ -70,7 +70,7 @@ export async function GET(request: Request){
     const userId = user._id;
 
    try {
-     const foundUser  = await UserModel.findById({userId})
+     const foundUser  = await UserModel.findById(userId)
      if(!foundUser){
            return Response.json({
              success: false,
@@ -85,7 +85,7 @@ export async function GET(request: Request){
          }, 
          {status: 200})
    } catch (error) {
-       console.error("Failed to update user status to aceept Message")
+       console.error("Failed to get user acceptance status")
 
         return Response.json({
             success: false,

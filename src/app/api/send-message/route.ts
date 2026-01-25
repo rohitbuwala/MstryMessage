@@ -1,6 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import UserModel, { Message } from "@/model/User";
-import { success } from "zod";
+
 
 
 
@@ -15,13 +15,14 @@ export async function POST(request: Request){
         if(!user?.isAcceptingMessages){
             return Response.json({
                 success: false,
-                messages: "User is Not Accepting the messsage"
+                message: "User is not accepting messages"
             },
             {status: 403})
         }
 
-        const newMessage = {content, createdAt: new Date() }
+const newMessage = {content, createdAt: new Date() }
         user.messages.push(newMessage as Message)
+        await user.save()
 
         return Response.json({
             success: true,
