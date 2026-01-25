@@ -2,7 +2,6 @@ import React from 'react'
 
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -44,32 +43,35 @@ const MessageCard = ({message, OnMessageDelete}: MessageCardProps) => {
 
   return (
     <Card>
-  <CardHeader>
-    <CardTitle>Card Title</CardTitle>
-     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="destructive"><X className='w-5 h-5'/></Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handlDeleteConfirm}>Continue</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-    <CardDescription>Card Description</CardDescription>
-    <CardAction>Card Action</CardAction>
-    </CardHeader>
-    <CardFooter>
-    </CardFooter>
-</Card>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle className="text-lg">Anonymous Message</CardTitle>
+          <CardDescription>{new Date(message.createdAt).toLocaleString()}</CardDescription>
+        </div>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive" size="sm">
+              <X className='w-4 h-4'/>
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete this message.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handlDeleteConfirm}>Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </CardHeader>
+      <CardContent>
+        <p className="text-gray-700">{message.content}</p>
+      </CardContent>
+    </Card>
   )
 }
 

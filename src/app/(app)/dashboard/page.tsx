@@ -43,10 +43,7 @@ const page = () => {
       setValue('acceptMessages', response.data.isAcceptingMessages || false)
     } catch (error) { 
       const axiosError = error as AxiosError<ApiResponse>;
-      toast.error("Error", {
-      description: axiosError.response?.data.message || 
-      "Failed to fetch message settings",
-      });    
+      toast.error(axiosError.response?.data.message || "Failed to fetch message settings");
     }finally{
       setIsSwitchLoading(false)
     }
@@ -58,19 +55,11 @@ const page = () => {
     try {
        const response = await axios.get<ApiResponse>('/api/get-messages');
        setMessages(response.data.messages || [])
-      toast.success("Refreshed Messages", {
-      description: "Showing latest messages",
-      });
+       toast.success("Messages refreshed successfully");
 
-    } catch (error) {
+     } catch (error) {
        const axiosError = error as AxiosError<ApiResponse>;
-      toast.error("Error", {
-      description: axiosError.response?.data.message || 
-      "Failed to fetch message settings",
-      });  
-    }finally{
-      setIsLoading(false)
-      setIsSwitchLoading(false)
+      toast.error(axiosError.response?.data.message || "Failed to update message settings");  
     }
   }, [setIsLoading, setMessages])
 
@@ -88,12 +77,9 @@ const page = () => {
       })
       setValue('acceptMessages' ,!acceptMessages)
         toast.success(response.data.message);
-    } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
-      toast.error("Error", {
-      description: axiosError.response?.data.message || 
-      "Failed to fetch message settings",
-      });  
+     } catch (error) {
+       const axiosError = error as AxiosError<ApiResponse>;
+      toast.error(axiosError.response?.data.message || "Failed to fetch message settings");  
     }
   }
 
@@ -107,9 +93,7 @@ const page = () => {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(profileUrl);
-    toast.success("URL Copied", {
-      description: "Profile Url has been copied to clipboard",
-      });
+    toast.success("URL copied to clipboard");
   }
     return (
     <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
