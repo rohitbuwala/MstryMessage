@@ -38,11 +38,19 @@ function page() {
 
 
 const onSubmit = async(data: z.infer<typeof signInSchema>) => {
+       const trimmedIdentifier = data.identifier.trim();
+       
+       if (!trimmedIdentifier || !data.password) {
+         toast.error("Validation Error", {
+         description: "Please fill in all fields"});
+         return;
+       }
+       
        setIsSubmitting(true)
        try {
          const result = await signIn('credentials', {
            redirect: false,
-           identifier: data.identifier,
+           identifier: trimmedIdentifier,
            password: data.password
          })
 if(result?.error){
@@ -50,7 +58,7 @@ if(result?.error){
           description: "Incorrect username or password"});
         }
         if(result?.url){
-          router.replace('/dashboard')
+          router.push('/dashboard')
         }
        } catch (error) {
          toast.error("Login Failed", {

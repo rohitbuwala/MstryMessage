@@ -21,12 +21,13 @@ credentials: {
 
              await dbConnect()
              try {
+               const trimmedIdentifier = credentials.identifier.trim();
                const user =  await UserModel.findOne({
                      $or: [
-                         {email: credentials.identifier},
-                         {username: credentials.identifier}
+                         {email: trimmedIdentifier.toLowerCase()},
+                         {username: trimmedIdentifier}
                      ]
-                 })
+                 }).select('+password +isVerified +verifyCode +verifyCodeExpiry')
                  if(!user){
                      throw new Error("No user found with this email or username")
                  }

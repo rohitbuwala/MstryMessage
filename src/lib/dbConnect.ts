@@ -19,7 +19,12 @@ async function dbConnect(): Promise<void> {
         throw new Error("MONGODB_URI environment variable is not defined");
       }
       
-      const db =  await mongoose.connect(process.env.MONGODB_URI)
+      const db =  await mongoose.connect(process.env.MONGODB_URI, {
+        maxPoolSize: 10,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+        bufferCommands: false
+      })
       connection.isConnected = db.connections[0].readyState
       console.log("Connected to database successfully");
         
