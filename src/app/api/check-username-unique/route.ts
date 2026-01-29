@@ -13,9 +13,18 @@ export async function GET(request: Request){
     await dbConnect();
 
     try {
-        const {searchParams} = new URL(request.url)
+const {searchParams} = new URL(request.url)
+        const rawUsername = searchParams.get('username')
+        
+        if (!rawUsername) {
+            return Response.json({
+                success: false,
+                message: "Username parameter is required"
+            }, { status: 400 })
+        }
+        
         const queryParam = {
-            username: searchParams.get('username')
+            username: decodeURIComponent(rawUsername)
         }
         // validate with zod
       const result = usernameQueryschema.safeParse(queryParam)
